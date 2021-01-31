@@ -49,6 +49,10 @@ const loremIpsum = 'Lorem ipsum dolor sit amet, consectetur adipiscing '+
   //så jag låter det stå; kommentera gärna.
   const inputBlugs = document.getElementById("inputBlugs");
   const blugDisplayWindow = document.getElementById("blugDisplayWindow");
+  if(inputBlugs == null)
+   throw("Error, couldn't find the blugDisplayWindow");
+  if(blugDisplayWindow == null)
+   throw("Error, couldn't find the blugDisplayWindow");
   
   inputBlugs.oninput = function(e) {
     
@@ -71,22 +75,36 @@ const loremIpsum = 'Lorem ipsum dolor sit amet, consectetur adipiscing '+
     }
   }
 
-  function setNumberOfBlugs(count) {
-    //kolla hur många som finns
-    //lägg till/ta bort efter behov
+  function setNumberOfBlugs(targetCount) {
+    
+    let numOfBlugs = blugDisplayWindow.childElementCount;
+    console.log(numOfBlugs);
 
-    //men först, bara skriv ut ett gäng.
-    for (let index = 0; index < count; index++) {
-      let createdBlug = createBlug(index);
+    if(numOfBlugs !== targetCount) {
+      let numToShift = targetCount - numOfBlugs;
 
-      blugDisplayWindow.appendChild(createdBlug);
+      //numToShift kan vara positivt eller negativt, därav abs(numToShift) ;
+      //anger hur många som ska läggas till/tas bort.
+      for (let i = 0; i < Math.abs(numToShift); i++) { 
+        if(numToShift > 0) 
+          blugDisplayWindow.appendChild(createBlug());
+        else 
+          blugDisplayWindow.removeChild(blugDisplayWindow.lastChild);
+      }
     }
+
+    
+    //else do nothing.
+    // for (let index = 0; index < count; index++) {
+    //   let createdBlug = createBlug(index);
+
+    //   blugDisplayWindow.appendChild(createdBlug);
+    // }
   }
 
-  function createBlug(index) {
+  function createBlug() {
     let blugCard = document.createElement("div");
     blugCard.setAttribute('class', 'blugCard');
-    blugCard.setAttribute('id', `blugCard${index}`);
 
 
     //create title of Blug-card.
@@ -98,6 +116,7 @@ const loremIpsum = 'Lorem ipsum dolor sit amet, consectetur adipiscing '+
     content.setAttribute('class', 'blugCardContent');
     content.innerText = loremIpsum;
 
+    blugCard.appendChild(title);
     blugCard.appendChild(content);
 
     return blugCard;
