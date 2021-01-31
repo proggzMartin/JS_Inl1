@@ -112,6 +112,12 @@ const loremIpsum = 'Lorem ipsum dolor sit amet, consectetur adipiscing '+
     title.setAttribute('class', 'blugCardTitle');
     title.innerText = 'Title';
 
+    title.addEventListener('click', function() {
+      replaceWithTextArea(title); 
+      //detta verkar vara så man gör. Problemet var att makeEditable åberopades direkt, 
+      //inte vid eventet.
+    });
+
     let content = document.createElement('div');
     content.setAttribute('class', 'blugCardContent');
     content.innerText = loremIpsum;
@@ -120,5 +126,41 @@ const loremIpsum = 'Lorem ipsum dolor sit amet, consectetur adipiscing '+
     blugCard.appendChild(content);
 
     return blugCard;
+  }
+
+  function replaceWithTextArea(element) {
+    //Testat med element.contentEditable = true ett tag utan framgång.
+    // let parent = element.parentElement;
+
+    let textArea = createTextArea(element);
+    element.replaceWith(textArea);
+    console.log(parent);
+  } 
+
+  function createTextArea(originElement) {
+
+    //replace originElement with a textarea that is editable.
+    let textArea = document.createElement('textarea');
+    textArea.value = originElement.textContent;
+
+    textArea.className = originElement.className +" blugTextArea";
+
+    //when editing is done and textArea is pressed, the originElement
+    //shall be put back with the new text from textarea.
+    textArea.addEventListener('mouseout', function() {
+      originElement.textContent = textArea.value;
+      console.log("after clicking textarea, textarea content: "+textArea.textContent);
+
+      console.log("after clicking textarea, originElement text now: "+originElement.textContent);
+      textArea.replaceWith(originElement);
+    });
+
+    // textArea.addEventListener('input', function() {
+    //   console.log(textArea.textContent);
+    //   console.log(textArea.value);
+
+    // });
+
+    return textArea;
   }
 })();

@@ -33,12 +33,9 @@ body {
 }
 
 .blugCard {
-  margin: 20px 0px;
-  display: inline-block;
-
+  margin: 20px auto;
   border: 5px solid #969696;
   border-radius: 5px;
-
 
   width: 45%;
 }
@@ -55,4 +52,9 @@ body {
 
 .blugCardContent {
   padding: 10px;
+  text-align: left;
+}
+
+.blugTextArea {
+  margin-right: 100%;
 }
