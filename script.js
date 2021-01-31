@@ -41,10 +41,17 @@ Vad har jag gjort för att felsöka/undvika buggar?
     let inputValue = e.target.value;
   
     if(typeof(inputValue) == 'string'){
-      console.log("parsing from string to int");
       inputValue = parseInt(inputValue);
     }
   
-    console.log(typeof(inputValue))
+    if(typeof(inputValue) == 'number') {
+
+      if(inputValue < 0) {
+        //set value to 0.
+        inputBlugs.value = 0;
+      }
+    } else {
+      throw "the inputValue was not parsed into a number-value.";
+    }
   }
 })();
