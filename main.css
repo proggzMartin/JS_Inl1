@@ -1,0 +1,18 @@
+* {
+  font-family: 'Courier New', Courier, monospace;
+  background-color: #474747;
+  color: #009420;
+}
+
+#mainHeader {
+  background-color: #333333;
+  color: #00ca2c;
+  text-align: center;
+}
+
+.headerContent {
+  background-color: inherit;
+  color: inherit;
+  vertical-align: middle;
+  margin: 10px;
+}
