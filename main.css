@@ -4,10 +4,15 @@
   color: #009420;
 }
 
+body {
+  margin: 0px;
+}
 #mainHeader {
   background-color: #333333;
   color: #00ca2c;
   text-align: center;
+  margin: 0px;
+  border-radius: 0px 0px 30px 30px;
 }
 
 .headerContent {
@@ -15,4 +20,39 @@
   color: inherit;
   vertical-align: middle;
   margin: 10px;
+}
+
+.card {
+  border: 3px solid #969696;
+  display: inline-block;
+  
+}
+
+#blugDisplayWindow {
+  text-align: center;
+}
+
+.blugCard {
+  margin: 20px 0px;
+  display: inline-block;
+
+  border: 5px solid #969696;
+  border-radius: 5px;
+
+
+  width: 45%;
+}
+
+.blugCardTitle {
+  border-bottom: 5px solid #969696;
+  
+  padding: 10px;
+  text-align: left;
+  
+  font-weight: bold;
+  font-size: 24px;
+}
+
+.blugCardContent {
+  padding: 10px;
 }
