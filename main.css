@@ -57,4 +57,11 @@ body {
 
 .blugTextArea {
   margin-right: 100%;
+  width: 100%;
+  /* Tar flera olika browsers:
+  https://stackoverflow.com/questions/271067/how-can-i-make-a-textarea-100-width-without-overflowing-when-padding-is-present */
+  -webkit-box-sizing: border-box; 
+     -moz-box-sizing: border-box;
+          box-sizing: border-box;
+  resize: none;
 }

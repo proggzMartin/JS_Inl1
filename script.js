@@ -1,11 +1,9 @@
 /* 
 Vad har jag gjort för att felsöka/undvika buggar?
 
-* 
-
 * debugger  https://www.w3schools.com/js/js_debugging.asp
 -I Chrome : F12 --> sources --> script.js --> markerar rad för debugging 
---> använder F5, F9, F10, F11 för att steppa igenom kod.
+--> använder F5, F9, F10, F11 för att steppa igenom kod, kontrollera värden som tillskrivs.
 
 -console.log 
 - track:a ex. att input är string; om så konvertera till number
@@ -16,12 +14,9 @@ Vad har jag gjort för att felsöka/undvika buggar?
 - missar man deklarera variabel kastas ett error/exception.
 * ------------------
 
-
 */
 
-//Knep för att undvika att variabler utanför blir global;
-//koden som definieras i filen hålls här. Se översta svaret:
-//https://stackoverflow.com/questions/1841916/how-to-avoid-global-variables-in-javascript
+
 
 const loremIpsum = 'Lorem ipsum dolor sit amet, consectetur adipiscing '+
                     'elit. Pellentesque id sodales eros. Sed quis nulla '+
@@ -34,6 +29,11 @@ const loremIpsum = 'Lorem ipsum dolor sit amet, consectetur adipiscing '+
                     'feugiat elit nisi, pellentesque facilisis est '+
                     'tincidunt ac. Nam interdum auctor lacus, sit amet '+
                     'dignissim justo. Vivamus consectetur egestas maximus.';
+
+
+//function här är ett knep för att undvika att variabler utanför blir global;
+//koden som definieras i filen hålls här. Se översta svaret:
+//https://stackoverflow.com/questions/1841916/how-to-avoid-global-variables-in-javascript
 (function() { 
   "use strict";
 
@@ -44,31 +44,42 @@ const loremIpsum = 'Lorem ipsum dolor sit amet, consectetur adipiscing '+
                 "icke-initialiserad variabler. Felmeddelande:\n\n"+e);
   }
   
-  //Skeptisk kring att ha 'const' här, föreläsningen sa const > let > var,
-  //och det verkar fungera, dvs. tycks ändå kunna förändra variablerna,
+  //Följande const-variabler; skeptisk till att ha 'const' här, föreläsningen sa const > let > var,
+  //och det verkar fungera, dvs. tycks ändå kunna förändra variablerna fast att dem är "konstanta",
   //så jag låter det stå; kommentera gärna.
-  const inputBlugs = document.getElementById("inputBlugs");
+
+
+  //Hämtar ut element med angivet ID; här är det inputten som anger antal Blugs
+  const inputBlugs = document.getElementById("inputBlugs"); 
+
+  //Hämtar ut element med angivet ID; här är det divven som innehåller alla Blugs-inlägg
   const blugDisplayWindow = document.getElementById("blugDisplayWindow");
+
   if(inputBlugs == null)
    throw("Error, couldn't find the blugDisplayWindow");
   if(blugDisplayWindow == null)
    throw("Error, couldn't find the blugDisplayWindow");
   
+  //När input:en får input, antingen skrivit av user eller man trycker upp/ned
+  //körs funktionen.
   inputBlugs.oninput = function(e) {
     
-    let inputValue = e.target.value;
+    let inputValue = e.target.value; //Värdet som inputten har.
   
-    if(typeof(inputValue) == 'string'){
+    //e.target.value tycks vara string i grunden även om jag inte kan skriva in bokstäver ; 
+    //i sådant fall parse:as till
+    if(typeof(inputValue) == 'string') {  
       inputValue = parseInt(inputValue);
     }
   
+    //om input är ett number, då är vi klara.
+    //Annars är något galet, då kastas ett fel.
     if(typeof(inputValue) == 'number') {
 
-      if(inputValue < 0) { //input cannot have value < 0.
-        inputBlugs.value = 0;
+      if(inputValue < 0) { //kan inte ha negativt antal inlägg, då får 0 finnas istället.
+        inputBlugs.value = 0; 
       }
-      setNumberOfBlugs(inputValue);
-
+      setNumberOfBlugs(inputValue); //inputValue anger hur många blugs som ska finnas.
 
     } else {
       throw "Unable to parse inputValue into a number-value.";
@@ -77,10 +88,11 @@ const loremIpsum = 'Lorem ipsum dolor sit amet, consectetur adipiscing '+
 
   function setNumberOfBlugs(targetCount) {
     
-    let numOfBlugs = blugDisplayWindow.childElementCount;
-    console.log(numOfBlugs);
+    let numOfBlugs = blugDisplayWindow.childElementCount; //Räknar antalet blugs.
 
-    if(numOfBlugs !== targetCount) {
+    //om det finns en differens mellan förfrågade och existerade blugs,
+    //så ska det åtgärdas.
+    if(numOfBlugs !== targetCount) { 
       let numToShift = targetCount - numOfBlugs;
 
       //numToShift kan vara positivt eller negativt, därav abs(numToShift) ;
@@ -89,38 +101,33 @@ const loremIpsum = 'Lorem ipsum dolor sit amet, consectetur adipiscing '+
         if(numToShift > 0) 
           blugDisplayWindow.appendChild(createBlug());
         else 
-          blugDisplayWindow.removeChild(blugDisplayWindow.lastChild);
+          blugDisplayWindow.removeChild(blugDisplayWindow.lastChild); //ta bort senaste.
       }
     }
-
-    
-    //else do nothing.
-    // for (let index = 0; index < count; index++) {
-    //   let createdBlug = createBlug(index);
-
-    //   blugDisplayWindow.appendChild(createdBlug);
-    // }
   }
 
   function createBlug() {
     let blugCard = document.createElement("div");
     blugCard.setAttribute('class', 'blugCard');
 
-
     //create title of Blug-card.
     let title = document.createElement('div');
     title.setAttribute('class', 'blugCardTitle');
     title.innerText = 'Title';
 
-    title.addEventListener('click', function() {
-      replaceWithTextArea(title); 
-      //detta verkar vara så man gör. Problemet var att makeEditable åberopades direkt, 
-      //inte vid eventet.
+    //om man klickar på titeln, ska denne ersättas med en textArea man kan ändra i.
+    title.addEventListener('click', function() { 
+      replaceWithTextArea(title, 0); 
     });
 
     let content = document.createElement('div');
     content.setAttribute('class', 'blugCardContent');
     content.innerText = loremIpsum;
+
+    //om man klickar på innehållet, ska detta ersättas med en textArea man kan ändra i.
+    content.addEventListener('click', function() {
+      replaceWithTextArea(content, 7); 
+    });
 
     blugCard.appendChild(title);
     blugCard.appendChild(content);
@@ -128,25 +135,23 @@ const loremIpsum = 'Lorem ipsum dolor sit amet, consectetur adipiscing '+
     return blugCard;
   }
 
-  function replaceWithTextArea(element) {
+  //Används för replace titel och content.
+  function replaceWithTextArea(originElement, numOfRows) {
     //Testat med element.contentEditable = true ett tag utan framgång.
-    // let parent = element.parentElement;
 
-    let textArea = createTextArea(element);
-    element.replaceWith(textArea);
-    console.log(parent);
-  } 
-
-  function createTextArea(originElement) {
-
-    //replace originElement with a textarea that is editable.
     let textArea = document.createElement('textarea');
+
     textArea.value = originElement.textContent;
 
+    //säkerställer att numOfRows verkligen är rätt variabeltyp så man inte får exceptions.
+    if(numOfRows !== null && numOfRows !== 'undefined' && typeof(numOfRows) === 'number' && numOfRows > 0)
+      textArea.rows = numOfRows;
+
+    //add same class + blugTextArea for placing it to the left.
     textArea.className = originElement.className +" blugTextArea";
 
-    //when editing is done and textArea is pressed, the originElement
-    //shall be put back with the new text from textarea.
+    //När man för muspekaren utanför textarean, kan man inte längre editera.
+    //Då sparas innehållet tillbaka till originElement.
     textArea.addEventListener('mouseout', function() {
       originElement.textContent = textArea.value;
       console.log("after clicking textarea, textarea content: "+textArea.textContent);
@@ -155,12 +160,6 @@ const loremIpsum = 'Lorem ipsum dolor sit amet, consectetur adipiscing '+
       textArea.replaceWith(originElement);
     });
 
-    // textArea.addEventListener('input', function() {
-    //   console.log(textArea.textContent);
-    //   console.log(textArea.value);
-
-    // });
-
-    return textArea;
-  }
+    originElement.replaceWith(textArea);
+  } 
 })();
